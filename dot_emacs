@@ -1,0 +1,112 @@
+;;; LOAD DIC
+;;;(setq exec-path (append "/path/to/brew/bin" exec-path))
+(setq ispell-program-name "/usr/local/bin/aspell")
+
+;;; Update dics by brew
+;;; brew install aspell --with-all-langs
+;;;Use scadi os x keyboard
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;;;UNI CODE
+(prefer-coding-system 'utf-8)
+
+;;(remove-hook 'find-file-hooks 'vc-find-file-hook)
+
+;; Load our emacs package manager
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+;;;(add-to-list 'package-archives
+;;;             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
+(unless (require 'el-get nil t)
+ (url-retrieve "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+               (lambda (s)
+                 (end-of-buffer)
+                 (eval-print-last-sexp))))
+
+;; now either el-get is `require'd already, or have been `load'ed by the
+;; el-get installer.
+(require 'el-get)
+
+;;;This gives line numbers
+(add-hook 'find.file-hook (lambda () (linum-mode 1)))
+(global-linum-mode 1)
+
+;;;Parent highlight
+(show-paren-mode 1)
+
+;;;Setting C/C++ syntax
+;; Coding style
+(setq c-default-style "stroustrup")
+;;;Disable tab
+(setq-default indent-tabs-mode nil)
+;; Automatic Indentation - indentation after newline
+(require 'cc-mode)
+(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+(c-set-offset 'template-args-cont 4 nil)
+
+;; Proper indent in hpp files inline code:
+(c-set-offset 'inline-open 0)
+
+;;; Packages repo
+(when (>= emacs-major-version 24)
+ (require 'package)
+ (package-initialize)
+ (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+ )
+
+;; nuke trailing whitespaces when writing to a file
+(add-hook 'write-file-hooks 'delete-trailing-whitespace)
+
+;; display only tails of lines longer than 80 columns, tabs and
+;; trailing whitespaces
+(setq whitespace-line-column 80
+     whitespace-style '(face tabs trailing lines-tail))
+
+;; activate minor whitespace mode
+(add-hook 'python-mode-hook 'whitespace-mode)
+(add-hook 'c-mode-common-hook 'whitespace-mode)
+(add-hook 'rst-mode-hook 'whitespace-mode)
+
+;; Allow Emacs to silently delete backup files
+(setq delete-old-versions t)
+
+;; No welcome message
+(setq inhibit-startup-message t)
+
+
+;;; LaTeX
+(require 'package)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+
+;;; Latex preview
+(latex-preview-pane-enable)
+
+
+;;; Load tramp
+(add-to-list 'load-path "~/emacs/tramp/lisp/")
+(require 'tramp)
+
+;;; Load Themes folder
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+;;; Set theme
+(load-theme 'deeper-blue t)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("6d1977ebe72065bf27f34974a9e5cb5dc0a7f296804376fad412d981dee7a7e4" "2cc9ecf74dd307cdf856a2f47f6149583d6cca9616a0f4ecc058bafa57e4ffa3" "b9530da009f1e1d46bd9fc181b2bcef8c9b1487fedacdad6f306e897b8b8c1f5" "fe20c1ea61a2836a5cea69963865b5b8df8c480ccaf3f11ad7f2e1f543f6c274" "30ab40031778cab604efbd11377fbee7e18bc072f360bd42ea5cd31bb699a09b" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "c493228400f006a3f7977ac2ac6c23539a8d44f3c4dc39c026648f6e3be7ab84" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

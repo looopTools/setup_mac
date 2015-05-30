@@ -17,6 +17,9 @@ brew install python3
 brew install markdown
 brew install tig
 
+# Installs whic require cask
+brew cask install vlc
+
 
 # Download settings files
 # Check syntax for wget

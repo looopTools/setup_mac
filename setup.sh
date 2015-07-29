@@ -19,6 +19,7 @@ brew install tig
 
 # Installs whic require cask
 brew cask install vlc
+brew cask install darktable
 
 
 # Download settings files

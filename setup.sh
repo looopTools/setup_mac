@@ -19,8 +19,13 @@ brew install tig
 
 # Installs whic require cask
 brew cask install vlc
+brew cask install darktable
 
 
 # Download settings files
 # Check syntax for wget
 wget https://github.com/looopTools/setup_mac/blob/master/dot_emacs -O .emacs
+
+
+# Update all software
+softwareupdate -ia

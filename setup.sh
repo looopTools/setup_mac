@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+## Setup user rights to /usr/local
+sudo chown $(whoami):admin /usr/local
+
+
 #Install homebrew
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 #Install cask
 brew install caskroom/cask/brew-cask
-
 
 #Install applications
 brew install emacs --cocoa --srgb --with-gnutls
@@ -16,6 +19,7 @@ brew install git
 brew install python3
 brew install markdown
 brew install tig
+brew install ruby
 
 # Installs whic require cask
 brew cask install vlc

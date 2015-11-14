@@ -1,0 +1,204 @@
+;;; Set default file path
+(setq default-directory "~/")
+
+(getenv "PATH")
+ (setenv "PATH"
+(concat
+;; "/Library/TeX/texbin/" ":"
+"/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin/" ":"
+(getenv "PATH")))
+
+;;; for running special
+(setq latex-run-command "pdflatex")
+
+
+
+;;; LOAD DIC
+;;;(setq exec-path (append "/path/to/brew/bin" exec-path))
+(setq ispell-program-name "/usr/local/bin/aspell")
+
+;;(add-hook 'LaTeX-mode-hook 'flyspell-mode) ;start flyspell-mode
+(setq ispell-dictionary "british")    ;set the default dictionary
+;;(add-hook 'LaTeX-mode-hook 'ispell)   ;start ispell
+
+
+;; AucTeX
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+
+;; Use Skim as viewer, enable source <-> PDF sync
+;; make latexmk available via C-c C-c
+;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+    '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+      :help "Run latexmk on file")
+    TeX-command-list)))
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+
+;; use Skim as default pdf viewer
+;; Skim's displayline is used for forward search (from .tex to .pdf)
+;; option -b highlights the current line; option -g opens Skim in the background
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+     '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+
+
+;;; Update dics by brew
+;;; brew install aspell --with-all-langs
+;;;Use scadi os x keyboard
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;;;
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
+(set-frame-parameter (selected-frame) 'alpha '(85 50))
+(add-to-list 'default-frame-alist '(alpha 85 50))
+
+;;;UNI CODE
+(prefer-coding-system 'utf-8)
+
+;;(remove-hook 'find-file-hooks 'vc-find-file-hook)
+
+;; Load our emacs package manager
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+
+;;;(add-to-list 'package-archives
+;;;             '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
+(unless (require 'el-get nil t)
+ (url-retrieve "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+               (lambda (s)
+                 (end-of-buffer)
+                 (eval-print-last-sexp))))
+
+;; now either el-get is `require'd already, or have been `load'ed by the
+;; el-get installer.
+(require 'el-get)
+
+;;;This gives line numbers
+(add-hook 'find.file-hook (lambda () (linum-mode 1)))
+(global-linum-mode 1)
+
+;;; Show colum number
+(setq column-number-mode t)
+
+;;;Parent highlight
+(show-paren-mode 1)
+
+;;;Setting C/C++ syntax
+;; Coding style
+(setq c-default-style "stroustrup")
+;;;Disable tab
+(setq-default indent-tabs-mode nil)
+;; Automatic Indentation - indentation after newline
+(require 'cc-mode)
+(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+(c-set-offset 'template-args-cont 4 nil)
+
+;; Proper indent in hpp files inline code:
+(c-set-offset 'inline-open 0)
+
+;;; Packages repo
+(when (>= emacs-major-version 24)
+ (require 'package)
+ (package-initialize)
+ (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+ )
+
+;; nuke trailing whitespaces when writing to a file
+(add-hook 'write-file-hooks 'delete-trailing-whitespace)
+
+;; display only tails of lines longer than 80 columns, tabs and
+;; trailing whitespaces
+(setq whitespace-line-column 80
+     whitespace-style '(face tabs trailing lines-tail))
+
+;; activate minor whitespace mode
+(add-hook 'python-mode-hook 'whitespace-mode)
+(add-hook 'c-mode-common-hook 'whitespace-mode)
+(add-hook 'rst-mode-hook 'whitespace-mode)
+
+;; Allow Emacs to silently delete backup files
+(setq delete-old-versions t)
+
+;; No welcome message
+(setq inhibit-startup-message t)
+
+
+;;; LaTeX
+(require 'package)
+(add-to-list 'package-archives
+  '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+
+;;; Latex preview
+;;(latex-preview-pane-enable)
+
+
+;;; Twitter MASTER KEY
+;;;(setq twittering-use-master-password t)
+
+;;; Load tramp
+(add-to-list 'load-path "~/emacs/tramp/lisp/")
+(require 'tramp)
+
+;;; Load Themes folder
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+
+;;; Set theme
+;;(load-theme 'deeper-blue t)
+(load-theme 'sanityinc-solarized-dark t)
+
+
+;;; FACEBOOK CHAT
+;; Define a list of my jabber.el accounts
+;; (setq jabber-account-list '(
+;;                             ("1129301912@chat.facebook.com"
+;;                              (:network-server . "chat.facebook.com")
+;;                              (:connection-type . starttls)
+;;                              (:port . 5222)
+;;                             (:password . "Lnc_1226058912"))))
+
+;; Disable jabber.el presence notifications
+;; (remove-hook 'jabber-alert-presence-hooks
+;;              'sr-jabber-alert-presence-fu
+;;             nc)
+
+;; Connect to all my jabber.el accounts on startup
+;;(jabber-connect-all)
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector (vector "#708183" "#c60007" "#728a05" "#a57705" "#2075c7" "#c61b6e" "#259185" "#042028"))
+ '(custom-safe-themes (quote ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "ad9fc392386f4859d28fe4ef3803585b51557838dbc072762117adad37e83585" "6d1977ebe72065bf27f34974a9e5cb5dc0a7f296804376fad412d981dee7a7e4" "2cc9ecf74dd307cdf856a2f47f6149583d6cca9616a0f4ecc058bafa57e4ffa3" "b9530da009f1e1d46bd9fc181b2bcef8c9b1487fedacdad6f306e897b8b8c1f5" "fe20c1ea61a2836a5cea69963865b5b8df8c480ccaf3f11ad7f2e1f543f6c274" "30ab40031778cab604efbd11377fbee7e18bc072f360bd42ea5cd31bb699a09b" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" "c493228400f006a3f7977ac2ac6c23539a8d44f3c4dc39c026648f6e3be7ab84" default)))
+ '(fci-rule-color "#0a2832")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map (quote ((20 . "#c60007") (40 . "#bd3612") (60 . "#a57705") (80 . "#728a05") (100 . "#259185") (120 . "#2075c7") (140 . "#c61b6e") (160 . "#5859b7") (180 . "#c60007") (200 . "#bd3612") (220 . "#a57705") (240 . "#728a05") (260 . "#259185") (280 . "#2075c7") (300 . "#c61b6e") (320 . "#5859b7") (340 . "#c60007") (360 . "#bd3612"))))
+ '(vc-annotate-very-old-color nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
+(add-to-list 'load-path "~/.emacs.d/modes")
+(load "asgard-mode")
+(add-to-list 'auto-mode-alist '("\\.yew\\'" . asgard-mode))

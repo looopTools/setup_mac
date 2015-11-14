@@ -1,0 +1,22 @@
+## Exports
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+## Alias
+export PATH=/usr/local/sbin:$PATH
+alias fdf="python /usr/bin/fdf/FindDuplicatesFiles.py"
+alias ecfile="/usr/local/ecfile.sh"
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade --all; brew cleanup; npm update npm -g; npm update -g; sudo gem update'
+
+##
+# Your previous /Users/tools/.bash_profile file was backed up as /Users/tools/.bash_profile.macports-saved_2015-06-17_at_23:09:14
+##
+
+# MacPorts Installer addition on 2015-06-17_at_23:09:14: adding an appropriate PATH variable for use with MacPorts.
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+## Setup latex
+export PATH=$PATH:/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbin

@@ -1,0 +1,14 @@
+[user]
+	name = Lars Nielsen
+	email = lnc13.lars@gmail.com
+[push]
+	default = matching
+
+[alias]
+        st = status
+        cm = commit
+        ps = push
+        pl = pull
+        inter = commit  --interactive
+[core]
+	editor = emacs

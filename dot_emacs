@@ -1,6 +1,10 @@
 ;;; Set default file path
 (setq default-directory "~/")
 
+;; On OS X/Darwin, make sure we add the path to the homebrew installs
+(when (string-equal system-type "darwin")
+  (setq exec-path (append exec-path '("/usr/local/bin"))))
+
 (getenv "PATH")
  (setenv "PATH"
 (concat
@@ -12,15 +16,23 @@
 (setq latex-run-command "pdflatex")
 
 
+;;; Set dictonary
+(setenv "DICTIONARY" "en_GB")
+;;; For loading hunspell insteand of ispell
+(when (executable-find "hunspell")
+  (setq-default ispell-program-name "hunspell")
+  (setq ispell-really-hunspell t))
+
+
+
 
 ;;; LOAD DIC
-;;;(setq exec-path (append "/path/to/brew/bin" exec-path))
-(setq ispell-program-name "/usr/local/bin/aspell")
+;;; (setq exec-path (append "/path/to/brew/bin" exec-path))
+;;; (setq ispell-program-name "/usr/local/bin/aspell")
 
 ;;(add-hook 'LaTeX-mode-hook 'flyspell-mode) ;start flyspell-mode
-(setq ispell-dictionary "british")    ;set the default dictionary
+;;;(setq ispell-dictionary "british")    ;set the default dictionary
 ;;(add-hook 'LaTeX-mode-hook 'ispell)   ;start ispell
-
 
 ;; AucTeX
 (setq TeX-auto-save t)
@@ -50,7 +62,8 @@
 (setq TeX-view-program-list
      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 
-
+;;; Markdown setup
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 
 ;;; Update dics by brew
 ;;; brew install aspell --with-all-langs
@@ -140,6 +153,10 @@
 (require 'package)
 (add-to-list 'package-archives
   '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;;; move-text
+(require 'move-text)
+(move-text-default-bindings)
 
 
 ;;; Latex preview

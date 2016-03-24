@@ -20,6 +20,8 @@ brew install python3
 brew install markdown
 brew install tig
 brew install ruby
+brew install hunspell
+
 
 # Installs whic require cask
 brew cask install vlc

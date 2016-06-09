@@ -226,15 +226,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-;;; FACEBOOK CHAT
-;; Define a list of my jabber.el accounts
-;; (setq jabber-account-list '(
-;;                             ("1129301912@chat.facebook.com"
-;;                              (:network-server . "chat.facebook.com")
-;;                              (:connection-type . starttls)
-;;                              (:port . 5222)
-;;                             (:password . "Lnc_1226058912"))))
-
 ;; Disable jabber.el presence notifications
 ;; (remove-hook 'jabber-alert-presence-hooks
 ;;              'sr-jabber-alert-presence-fu

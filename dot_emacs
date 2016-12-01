@@ -1,10 +1,10 @@
-;;; Set default file path
-(setq default-directory "~/")
+ (load-file "~/git/my-shared-files/common-emacs.el")
 
 ;; On OS X/Darwin, make sure we add the path to the homebrew installs
 (when (string-equal system-type "darwin")
   (setq exec-path (append exec-path '("/usr/local/bin"))))
 
+;;; Mac
 (getenv "PATH")
  (setenv "PATH"
 (concat
@@ -15,6 +15,13 @@
 ;;; for running special
 (setq latex-run-command "pdflatex")
 
+;;; Update dics by brew
+;;; brew install aspell --with-all-langs
+;;;Use scadi os x keyboard
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
 
 ;;; Set dictonary
 (setenv "DICTIONARY" "en_GB")
@@ -23,6 +30,21 @@
   (setq-default ispell-program-name "hunspell")
   (setq ispell-really-hunspell t))
 
+
+;;; REVERT FILE ON F5
+
+ (global-set-key
+  (kbd "<f5>")
+  (lambda (&optional force-reverting)
+    "Interactive call to revert-buffer. Ignoring the auto-save
+ file and not requesting for confirmation. When the current buffer
+ is modified, the command refuses to revert it, unless you specify
+ the optional argument: force-reverting to true."
+    (interactive "P")
+    ;;(message "force-reverting value is %s" force-reverting)
+    (if (or force-reverting (not (buffer-modified-p)))
+        (revert-buffer :ignore-auto :noconfirm)
+      (error "The buffer has been modified"))))
 
 
 
@@ -35,19 +57,7 @@
 ;;(add-hook 'LaTeX-mode-hook 'ispell)   ;start ispell
 
 ;; AucTeX
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
 
-(eval-after-load "latex"
-  '(progn
-     (define-key LaTeX-mode-map (kbd "C-g") "\\gls{} ")))
 
 ;; Use Skim as viewer, enable source <-> PDF sync
 ;; make latexmk available via C-c C-c
@@ -66,24 +76,13 @@
 (setq TeX-view-program-list
      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 
-;;; Markdown setup
-(add-hook 'markdown-mode-hook 'flyspell-mode)
 
-;;; Update dics by brew
-;;; brew install aspell --with-all-langs
-;;;Use scadi os x keyboard
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
 
 ;;;
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
 (set-frame-parameter (selected-frame) 'alpha '(85 50))
 (add-to-list 'default-frame-alist '(alpha 85 50))
 
-;;;UNI CODE
-(prefer-coding-system 'utf-8)
 
 ;;(remove-hook 'find-file-hooks 'vc-find-file-hook)
 
@@ -113,38 +112,15 @@
 ;;;Parent highlight
 (show-paren-mode 1)
 
+;;;; Projectile setup
+
+(setq projectile-indexing-method 'native)
+(setq projectile-enable-caching t)
+
+
 ;;;Setting C/C++ syntax
 ;; Coding style
-(setq c-default-style "stroustrup")
-;;;Disable tab
-(setq-default indent-tabs-mode nil)
-;; Automatic Indentation - indentation after newline
-(require 'cc-mode)
-(define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
-(c-set-offset 'template-args-cont 4 nil)
 
-;; Proper indent in hpp files inline code:
-(c-set-offset 'inline-open 0)
-
-;;; Packages repo
-(when (>= emacs-major-version 24)
- (require 'package)
- (package-initialize)
- (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
- )
-
-;; nuke trailing whitespaces when writing to a file
-(add-hook 'write-file-hooks 'delete-trailing-whitespace)
-
-;; display only tails of lines longer than 80 columns, tabs and
-;; trailing whitespaces
-(setq whitespace-line-column 80
-     whitespace-style '(face tabs trailing lines-tail))
-
-;; activate minor whitespace mode
-(add-hook 'python-mode-hook 'whitespace-mode)
-(add-hook 'c-mode-common-hook 'whitespace-mode)
-(add-hook 'rst-mode-hook 'whitespace-mode)
 
 ;; Allow Emacs to silently delete backup files
 (setq delete-old-versions t)
@@ -162,6 +138,50 @@
 (require 'move-text)
 (move-text-default-bindings)
 
+;;; LISP FOR PP
+; Add this to your .emacs file, or load it from an emacs lisp file.
+
+(setq inferior-lisp-program "/usr/local/bin/petite")
+(setq scheme-program-name "/usr/local/bin/petite")
+
+(defun run-petite-interactively ()
+  (interactive)
+  (let ((inferior-lisp-program "/usr/local/bin/petite"))  ; assumes that you have installed Petite Chez Scheme here...
+    (run-lisp inferior-lisp-program)))
+
+
+;(load-file "~/.emacs.d/scheme-setup.el")
+
+(defun lisp-eval-buffer ()
+  (interactive)
+  (lisp-eval-region (point-min) (point-max)))
+
+
+(defun extend-scheme-mode ()
+  ;;  (define-key scheme-mode-map "\C-\M-x" 'lisp-eval-defun)      ; always available
+  (define-key scheme-mode-map "\C-\M-d" 'lisp-eval-defun)      ; always available
+  (define-key scheme-mode-map "\C-\M-y" 'lisp-eval-region)     ; available if you are in scheme mode
+  (define-key scheme-mode-map "\C-\M-z" 'lisp-eval-buffer)    ; define above
+
+  ; Menu support:
+  (define-key scheme-mode-map [menu-bar scheme schemeeval]
+    (cons "Evaluate Scheme form(s)" (make-sparse-keymap "SchemeEval")))
+
+  (define-key scheme-mode-map [menu-bar scheme schemeeval eval-buffer]
+      '("Current Buffer" . lisp-eval-buffer))
+
+  (define-key scheme-mode-map [menu-bar scheme schemeeval eval-region]
+      '("Current Region" . lisp-eval-region))
+
+  (define-key scheme-mode-map [menu-bar scheme schemeeval eval-def]
+      '("Current Form" . lisp-eval-defun))
+)
+
+; Extends Scheme mode with key bindings for lisp-eval-defun, lisp-eval-region, and lisp-eval-buffer.
+(setq scheme-mode-hook
+  (if (boundp 'scheme-mode-hook)
+      (cons 'extend-scheme-mode scheme-mode-hook)
+      (list 'extend-scheme-mode)))
 
 ;;; Latex preview
 ;;(latex-preview-pane-enable)

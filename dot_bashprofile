@@ -13,6 +13,7 @@ alias ecfile="/usr/local/ecfile.sh"
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade --all; brew cleanup; npm update npm -g; npm update -g; sudo gem update'
 alias weather_aa='curl -4 http://wttr.in/Amsterdam'
 alias ll='ls -l'
+alias dotnot='dotnet'
 ##
 # Your previous /Users/tools/.bash_profile file was backed up as /Users/tools/.bash_profile.macports-saved_2015-06-17_at_23:09:14
 ##
@@ -27,3 +28,8 @@ export PATH=$PATH:/Library/TeX/Distributions/.DefaultTeX/Contents/Programs/texbi
 
 ## Setup PGSQL
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+
+# Setting PATH for Python 2.7
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/2.7/bin:${PATH}"
+export PATH
